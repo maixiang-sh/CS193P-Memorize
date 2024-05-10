@@ -7,15 +7,27 @@
 
 import SwiftUI
 
+let fruits = ["🍎", "🍌", "🍇", "🍈", "🍓", "🍑", "🍉", "🥝", "🍐", "🍏", "🍊", "🍋", "🫐", "🥭", "🍒", "🥥", "🍋‍🟩", "🍍"]
+let foods = ["🥐", "🥯", "🍞", "🥖", "🥨", "🥞", "🧇", "🍗", "🌭", "🍔", "🍟", "🍕", "🥪", "🥙", "🧆", "🌮", "🌯", "🫔", "🥗", "🥘", "🍣", "🍜", "🍱", "🥮", "🍩", "🍡"]
+let animals = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐻‍❄️", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵"]
+let sports = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🥏", "🎱", "🪀"]
+
+
 struct ContentView: View {
-    let emojis = ["🍎", "🍌", "🍇", "🍈", "🍓", "🍑"]
-    @State var cardCount = 4
+    @State var emojis = fruits
+    @State var currentThemeNmae = "Fruits"
     
     var body: some View {
         VStack {
-            cards
+            ///  Title
+            Text("Memorize").font(.largeTitle).bold()
+            /// Cards
+            ScrollView {
+                cards
+            }
             Spacer()
-            cardCountAdjusters
+            /// Button
+            themesButtons
         }
         .padding()
     }
@@ -24,8 +36,8 @@ struct ContentView: View {
     var cards: some View {
         // 使用 GridItem(.adaptive(minimum: 60)) 意味着我们希望网格尽可能多地容纳每行的项目，每个项目的最小大小为 60 点。
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
-            ForEach(0..<cardCount, id: \.self) { index in
-                CardView(content: emojis[index])
+            ForEach(emojis, id: \.self) { emoji in
+                CardView(content: emoji)
                     .aspectRatio(2/3, contentMode: .fit)
             }
         }
@@ -33,30 +45,24 @@ struct ContentView: View {
     }
     
     
-    var cardCountAdjusters: some View {
-        HStack {
-            cardRemover
-            Spacer()
-            cardAdder
+    var themesButtons: some View {
+        HStack(spacing: 20) {
+            themeButton(symbol: "carrot", name: "Fruits", emojis: fruits)
+            themeButton(symbol: "fork.knife", name: "Foods", emojis: foods)
+            themeButton(symbol: "cat", name: "Animals", emojis: animals)
+            themeButton(symbol: "basketball", name: "Sports", emojis: sports)
         }
     }
     
-    /// card 数量增减按钮
-    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-        Button(action: {
-            cardCount += offset
-        }, label: {
-            Image(systemName: symbol)
-        })
-        .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
-    }
-    
-    var cardRemover: some View {
-        cardCountAdjuster(by: -1, symbol: "rectangle.fill.badge.minus")
-    }
-    
-    var cardAdder: some View {
-        cardCountAdjuster(by: +1, symbol: "rectangle.fill.badge.plus")
+    func themeButton(symbol: String, name: String, emojis: [String]) -> some View {
+            Button {
+                self.emojis = emojis.shuffled()
+            } label: {
+                VStack {
+                    Image(systemName: symbol)
+                    Text(name)
+                }
+            }
     }
 }
 
