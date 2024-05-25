@@ -8,10 +8,14 @@
 import SwiftUI
 
 @main
+
 struct MemorizeApp: App {
+    @State var emojiMemorizeGame = EmojiMemorizeGame()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            EmojiMemorizeGameView()
+                .environment(emojiMemorizeGame)
         }
     }
 }

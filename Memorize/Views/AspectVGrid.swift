@@ -45,7 +45,9 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View {
             ]
             
             // 打印网格的信息
+            #if DEBUG
             debugGridInfo(geometry, gridItemSize)
+            #endif
             
             return LazyVGrid(columns: columns, spacing: 0) {
                 ForEach(items) { item in

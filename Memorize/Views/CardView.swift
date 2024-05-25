@@ -24,21 +24,33 @@ struct CardView: View {
     
     /// 卡片视图的主体部分，包括形状、文本和其他视图修饰。
     var body: some View {
-        Pie(endAngle: .degrees(180))  // 创建一个半圆形的饼图
-            .opacity(Constants.Pie.opacity)  // 设置饼图的透明度
-            .overlay {
-                Text(card.content)  // 显示卡片内容
-                    .multilineTextAlignment(.center)  // 文本居中对齐
-                    .font(.system(size: Constants.FontSize.largest))  // 设置文本的字体大小
-                    .minimumScaleFactor(Constants.FontSize.scaleFactor)  //  设置文本缩放的最小比例因子
-                    .aspectRatio(1, contentMode: .fit)  // 设置视图的宽高比为1:1
-                    .padding(Constants.inset)  // 设置文本的内边距
-                    .rotationEffect(.degrees(card.isMatched ? 360 : 0)) // 旋转 Text
-                    .animation(.spin(duration: 2), value: card.isMatched) // 指定视图改变时的动画方式
+        TimelineView(.animation) { _ in
+            if (card.isFaceUp || !card.isMatched) {
+                Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))  // 创建一个半圆形的饼图，用于显示剩余时间的百分比
+                    .opacity(Constants.Pie.opacity)  // 设置饼图的透明度
+                    .overlay {
+                        cardContent
+                    }
+                    .padding(Constants.Pie.inset)  // 设置饼图的内边距
+                    .cardify(isFaceUp: card.isFaceUp)  // 应用卡片翻转效果
+                    .transition(.scale)
+            } else {
+                Color.clear
             }
-            .padding(Constants.Pie.inset)  // 设置饼图的内边距
-            .cardify(isFaceUp: card.isFaceUp)  // 应用卡片翻转效果
-//            .opacity(card.isFaceUp && card.isMatched ? 0 : 1)  // 如果卡片匹配且面朝上，则透明显示
+        }  // 当卡片匹配成功，且再次面朝下时，透明显示
+    }
+    
+    /// 卡片中的内容视图
+    @ViewBuilder
+    private var cardContent: some View {
+        Text(card.content)  // 显示卡片内容
+            .multilineTextAlignment(.center)  // 文本居中对齐
+            .font(.system(size: Constants.FontSize.largest))  // 设置文本的字体大小
+            .minimumScaleFactor(Constants.FontSize.scaleFactor)  //  设置文本缩放的最小比例因子
+            .aspectRatio(1, contentMode: .fit)  // 设置视图的宽高比为1:1
+            .padding(Constants.inset)  // 设置文本的内边距
+            .rotationEffect(.degrees(card.isMatched ? 360 : 0)) // 旋转 Text
+            .animation(.spin(duration: 2), value: card.isMatched) // 指定视图改变时的动画方式
     }
     
     /// 存储与卡片视图相关的配置常量。

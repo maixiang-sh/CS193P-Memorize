@@ -12,9 +12,6 @@ import CoreGraphics
 ///
 /// 该结构体遵循 `Shape` 协议，允许使用 SwiftUI 的绘图系统自定义形状。
 /// 通过指定开始角度和结束角度，可以控制扇形的形状和方向。
-import SwiftUI
-import CoreGraphics
-
 struct Pie: Shape {
     /// 扇形的开始角度，默认为0度（向上）。
     let startAngle: Angle = .zero
